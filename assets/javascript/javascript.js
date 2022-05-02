@@ -20,7 +20,22 @@ var questionData = [{
     answer: "onclick"
 }];
 
-var timeLeft = 3;
+var timeLeft = 30;
+var timerStarted = false;
+
+var interval = setInterval(function(){
+    if(timerStarted == true){
+        timeLeft--;
+        if(timeLeft > 0){
+            timeEl.innerHTML = timeLeft;
+        }else{
+            timeEl.innerHTML = timeLeft;
+            clearInterval(interval);
+            gameOver("time");
+        }
+    }
+}, 1000);
+
 var qnum = 0;
 var score = 0;
 
@@ -80,6 +95,11 @@ function startQuiz(){
 function gameOver(condition){
     card.innerHTML = "";
 
+    if(timeLeft < 0){
+        timeLeft = 0;
+        timeEl.innerHTML = timeLeft;
+    }
+
     var gameOverTitle = document.createElement("h2");
     if(condition == "time"){
         gameOverTitle.innerHTML = "Game Over, you ran out of time!";
@@ -88,15 +108,46 @@ function gameOver(condition){
     }
     card.appendChild(gameOverTitle);
 
-    var gameOverP = document.createElement("p");
-    gameOverp.innerHTML = "You scored " + score + " out of " + questionData.length + " correctly!";
+    var totalScore = (score * 10) + timeLeft;
 
+    var gameOverP = document.createElement("p");
+    gameOverP.innerHTML = "You scored " + score + " out of "
+                        + questionData.length 
+                        + " correctly, so we multiply that by 10 and add your remaining time for a total score of "
+                         + totalScore;
+    card.appendChild(gameOverP);
+
+    var scoreP = document.createElement("p");
+    scoreP.innerHTML = "Enter your initials for a high score below!";
+    card.appendChild(scoreP);
+
+    var scoreInput = document.createElement("input");
+    scoreInput.setAttribute("type", "text");
+    scoreInput.setAttribute("id", "highScoreInput");
+    card.appendChild(scoreInput);
+
+    var saveScore = document.createElement("button");
+    saveScore.innerHTML = "Save your highscore!";
+    saveScore.setAttribute("class", "btn");
+    card.appendChild(saveScore);
+
+    var tryAgainBtn = document.createElement("button");
+    tryAgainBtn.innerHTML = "Try Again!";
+    tryAgainBtn.setAttribute("class", "btn");
+    card.appendChild(tryAgainBtn);
 }
 
 function nextQuestion(correct){
     console.log(qnum);
     if(correct == true){
         qnum++;
+        
+        //End game if no more questions
+        if(!questionData[qnum]){
+            gameOver();
+            clearInterval(interval);
+            return;
+        }
         console.log(qnum);
         for(var i = 0; i < 4; i++){
             var btn = document.querySelector("button[data-id='" + i + "']");
@@ -110,17 +161,7 @@ function nextQuestion(correct){
 }
 
 function startTimer(){
-
-    var interval = setInterval(function(){
-        timeLeft--;
-        if(timeLeft > 0){
-            timeEl.innerHTML = timeLeft;
-        }else{
-            timeEl.innerHTML = timeLeft;
-            clearInterval(interval);
-            gameOver("time");
-        }
-    }, 1000);
+    timerStarted = true;
 }
 
 function quizBtnHandler(event){
@@ -130,8 +171,11 @@ function quizBtnHandler(event){
 
     //If target is a quiz answer button
     if(targetEl.hasAttribute("data-id")){
+
+        //Validate if the input == the answer
         if(targetEl.innerHTML == questionData[qnum].answer){
             console.log(true);
+            score++;
             nextQuestion(true);
         }
         else if(targetEl.type === "submit"){
@@ -139,6 +183,10 @@ function quizBtnHandler(event){
             nextQuestion(false);
         }
     }
+}
+
+function saveScoreListener(){
+    
 }
 
 function startButtonListener(event){
