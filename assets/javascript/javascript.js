@@ -20,7 +20,7 @@ var questionData = [{
     answer: "onclick"
 }];
 
-var timeLeft = 60;
+var timeLeft = 3;
 var qnum = 0;
 var score = 0;
 
@@ -77,6 +77,22 @@ function startQuiz(){
     startTimer();
 }
 
+function gameOver(condition){
+    card.innerHTML = "";
+
+    var gameOverTitle = document.createElement("h2");
+    if(condition == "time"){
+        gameOverTitle.innerHTML = "Game Over, you ran out of time!";
+    }else {
+        gameOverTitle.innerHTML = "Game Over, you answered all questions!";
+    }
+    card.appendChild(gameOverTitle);
+
+    var gameOverP = document.createElement("p");
+    gameOverp.innerHTML = "You scored " + score + " out of " + questionData.length + " correctly!";
+
+}
+
 function nextQuestion(correct){
     console.log(qnum);
     if(correct == true){
@@ -95,10 +111,14 @@ function nextQuestion(correct){
 
 function startTimer(){
 
-    setInterval(function(){
+    var interval = setInterval(function(){
+        timeLeft--;
         if(timeLeft > 0){
-            timeLeft--;
             timeEl.innerHTML = timeLeft;
+        }else{
+            timeEl.innerHTML = timeLeft;
+            clearInterval(interval);
+            gameOver("time");
         }
     }, 1000);
 }
