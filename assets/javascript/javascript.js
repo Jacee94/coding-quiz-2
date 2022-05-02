@@ -20,6 +20,8 @@ var questionData = [{
     answer: "onclick"
 }];
 
+var card = document.getElementById("quiz-card");
+
 var timeLeft = 60;
 var qnum = 0;
 var score = 0;
@@ -32,7 +34,6 @@ var btn4;
 var btnHolder;
 
 function startQuiz(){
-    var card = document.getElementById("quiz-card");
     card.innerHTML = "";
 
     questionTitle = document.createElement("h2")
@@ -44,40 +45,60 @@ function startQuiz(){
     btn1 = document.createElement("button");
     btn1.textContent = questionData[qnum].buttons[0];
     btn1.setAttribute("data-id", 0);
-    btn1.setAttribute("id", "quiz-btn");
     btn1.setAttribute("class", "btn col-9");
     btnHolder.appendChild(btn1);
 
     btn2 = document.createElement("button");
     btn2.textContent = questionData[qnum].buttons[1];
     btn2.setAttribute("data-id", 1);
-    btn2.setAttribute("id", "quiz-btn");
     btn2.setAttribute("class", "btn col-9");
     btnHolder.appendChild(btn2);
 
     btn3 = document.createElement("button");
     btn3.textContent = questionData[qnum].buttons[2];
     btn3.setAttribute("data-id", 2);
-    btn3.setAttribute("id", "quiz-btn");
     btn3.setAttribute("class", "btn col-9");
     btnHolder.appendChild(btn3);
 
     btn4 = document.createElement("button");
     btn4.textContent = questionData[qnum].buttons[3];
     btn4.setAttribute("data-id", 3);
-    btn4.setAttribute("id", "quiz-btn");
     btn4.setAttribute("class", "btn col-9");
     btnHolder.appendChild(btn4);
 
     card.appendChild(btnHolder);
+
+    card.addEventListener("click", function(event){
+        quizBtnHandler(event);
+    });
+
+    startTimer();
 }
 
 function nextQuestion(){
 
 }
 
+function startTimer(){
+
+}
+
+function quizBtnHandler(event){
+    var targetEl = event.target;
+    
+    //If target is a quiz answer button
+    if(targetEl.hasAttribute("data-id")){
+        if(targetEl.innerHTML === questionData[qnum].answer){
+            console.log("correct!");
+        }
+        else if(targetEl.type === "submit"){
+            console.log("incorrect!");
+        }
+    }
+}
+
 function startButtonListener(event){
     startQuiz();
 }
 
-document.getElementById("start-quiz-btn").addEventListener("click", startButtonListener)
+document.getElementById("start-quiz-btn").addEventListener("click", startButtonListener);

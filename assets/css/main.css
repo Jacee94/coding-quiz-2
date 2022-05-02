@@ -30,7 +30,7 @@ section{
     margin: 10px;
 }
 
-#start-quiz-btn, #quiz-btn{
+#start-quiz-btn, .btn{
     background-color: purple;
     color: white;
     margin: 10px;
