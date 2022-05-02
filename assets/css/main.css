@@ -1,0 +1,37 @@
+body{
+    background-color: #d6d6d6;
+    margin: 20px;
+}
+
+header, section{
+    margin: 10px;
+}
+
+header{
+    background-color: white;
+    border: purple 2px solid;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+section{
+    text-align: center;
+}
+
+#quiz-card{
+    background-color: white;
+    width: auto;
+    padding: 20px;
+    border: purple 2px solid;
+    border-radius: 20px;
+}
+
+#instructions{
+    margin: 10px;
+}
+
+#start-quiz-btn, .btn{
+    background-color: purple;
+    color: white;
+    margin: 10px;
+}
