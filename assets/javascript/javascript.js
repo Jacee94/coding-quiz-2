@@ -20,8 +20,6 @@ var questionData = [{
     answer: "onclick"
 }];
 
-var card = document.getElementById("quiz-card");
-
 var timeLeft = 60;
 var qnum = 0;
 var score = 0;
@@ -32,6 +30,10 @@ var btn2;
 var btn3;
 var btn4;
 var btnHolder;
+
+var card = document.getElementById("quiz-card");
+var timeEl = document.getElementById("time-left");
+timeEl.innerHTML = timeLeft;
 
 function startQuiz(){
     card.innerHTML = "";
@@ -86,11 +88,19 @@ function nextQuestion(correct){
     
             questionTitle.innerHTML = questionData[qnum].question;
         }
+    } else if(correct == false){
+        timeLeft = timeLeft - 10;
     }
 }
 
 function startTimer(){
 
+    setInterval(function(){
+        if(timeLeft > 0){
+            timeLeft--;
+            timeEl.innerHTML = timeLeft;
+        }
+    }, 1000);
 }
 
 function quizBtnHandler(event){
