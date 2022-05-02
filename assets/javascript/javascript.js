@@ -9,11 +9,11 @@ var questionData = [{
 },{
     question: "How do you write an IF statement in JavaScript?",
     buttons: ["if i = 5","if(i == 5)","if i == 5 then","if i = 5 then"],
-    answer: "if (i == 5)" 
+    answer: "if(i == 5)" 
 },{
     question: "How does a FOR loop start?",
     buttons: ["for (i = 0; i <= 5; i++)","for (i = 0; i <= 5)","for i = 1 to 5","for (i <= 5; i++)"],
-    answer: "for (i = 0; i <= 5; i++)"
+    answer: "for (i = 0; i &lt;= 5; i++)"
 },{
     question: "Which event occurs when the user clicks on an HTML element?",
     buttons: ["onmouseover","onmouseclick","onchange","onclick"],
@@ -75,8 +75,18 @@ function startQuiz(){
     startTimer();
 }
 
-function nextQuestion(){
-
+function nextQuestion(correct){
+    console.log(qnum);
+    if(correct == true){
+        qnum++;
+        console.log(qnum);
+        for(var i = 0; i < 4; i++){
+            var btn = document.querySelector("button[data-id='" + i + "']");
+            btn.innerHTML = questionData[qnum].buttons[i];
+    
+            questionTitle.innerHTML = questionData[qnum].question;
+        }
+    }
 }
 
 function startTimer(){
@@ -85,14 +95,18 @@ function startTimer(){
 
 function quizBtnHandler(event){
     var targetEl = event.target;
-    
+    console.log(targetEl.innerHTML);
+    console.log(questionData[qnum].answer)
+
     //If target is a quiz answer button
     if(targetEl.hasAttribute("data-id")){
-        if(targetEl.innerHTML === questionData[qnum].answer){
-            console.log("correct!");
+        if(targetEl.innerHTML == questionData[qnum].answer){
+            console.log(true);
+            nextQuestion(true);
         }
         else if(targetEl.type === "submit"){
-            console.log("incorrect!");
+            console.log(false);
+            nextQuestion(false);
         }
     }
 }
