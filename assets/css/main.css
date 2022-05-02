@@ -29,3 +29,9 @@ section{
 #instructions{
     margin: 10px;
 }
+
+#start-quiz-btn, #quiz-btn{
+    background-color: purple;
+    color: white;
+    margin: 10px;
+}
