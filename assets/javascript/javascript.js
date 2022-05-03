@@ -137,12 +137,42 @@ function gameOver(condition){
 }
 
 function viewHighScores(){
-    card.innerHTML = "<h2>High-Scores:</h2>";
+    if(!document.getElementById("high-score-title")){
+        card.innerHTML = "<h2 id='high-score-title'>High-Scores:</h2>";
 
-    getHighScores();
+        getHighScores();
 
-    for(var i = 0; i < highscores.length; i++){
-        
+        highscores.sort((a,b)=>{
+            if(a.hScore > b.hScore){
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+
+        console.log(highscores);
+
+        for(var i = 0; i < highscores.length; i++){
+            var scoreDiv = document.createElement("div");
+            scoreDiv.setAttribute("class", "row justify-content-center");
+            var p = document.createElement("p");
+            p.innerHTML = highscores[i].initial + " | " + highscores[i].hScore;
+            p.setAttribute("class", "highscore-text col-3");
+            card.appendChild(scoreDiv);
+            scoreDiv.appendChild(p);
+        }
+
+        var goBackDiv = document.createElement("div");
+        goBackDiv.setAttribute("class", "row justify-content-center");
+
+        var goBackBtn = document.createElement("button");
+        goBackBtn.innerHTML = "Go back to start";
+        goBackBtn.addEventListener("click", function(){
+            location.reload();
+        });
+        goBackBtn.setAttribute("class", "btn");
+        goBackDiv.appendChild(goBackBtn);
+        card.appendChild(goBackDiv);
     }
 }
 
@@ -229,7 +259,7 @@ function saveScoreHandler(event){
 
     var highscore = {
         initial: inputVal,
-        hScore: score        
+        hScore: (score * 10) + timeLeft        
     }
 
     getHighScores();
@@ -245,16 +275,18 @@ function saveScoreHandler(event){
 }
 
 function getHighScores(){
-    var savedScores = localStorage.getItem("highscoreStorage");
+    if(!highscores[0]){
+        var savedScores = localStorage.getItem("highscoreStorage");
 
-    if(!savedScores){
-        return false;
-    }
+        if(!savedScores){
+            return false;
+        }
 
-    savedScores = JSON.parse(savedScores);
-    
-    for(var i = 0; i < savedScores.length; i++){
-        highscores.push(savedScores[i]);
+        savedScores = JSON.parse(savedScores);
+        
+        for(var i = 0; i < savedScores.length; i++){
+            highscores.push(savedScores[i]);
+        }
     }
 }
 

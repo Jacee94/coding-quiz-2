@@ -14,6 +14,10 @@ header{
     border-radius: 10px;
 }
 
+h2{
+    margin-bottom: 20px;
+}
+
 section{
     text-align: center;
 }
@@ -34,4 +38,10 @@ section{
     background-color: purple;
     color: white;
     margin: 10px;
+}
+
+.highscore-text{
+    background-color: purple;
+    color: white;
+    border-radius: 10px;
 }
