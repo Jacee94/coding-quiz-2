@@ -20,7 +20,9 @@ var questionData = [{
     answer: "onclick"
 }];
 
-var timeLeft = 30;
+var highscores = [];
+
+var timeLeft = 45;
 var timerStarted = false;
 
 var interval;
@@ -134,6 +136,16 @@ function gameOver(condition){
     card.appendChild(tryAgainDiv);
 }
 
+function viewHighScores(){
+    card.innerHTML = "<h2>High-Scores:</h2>";
+
+    getHighScores();
+
+    for(var i = 0; i < highscores.length; i++){
+        
+    }
+}
+
 function nextQuestion(correct){
     if(correct == true){
         qnum++;
@@ -204,10 +216,46 @@ function quizBtnHandler(event){
 }
 
 function saveScoreHandler(event){
+    debugger;
+    var input = document.getElementById("highScoreInput");
+    if(input.value.length != 2){
+        if(event.target.innerHTML != "Save your highscore! Please Enter a two letter initial"){
+            event.target.innerHTML += " Please Enter a two letter initial";
+        }
+        return;
+    }
+
+    var inputVal = input.value;
+
+    var highscore = {
+        initial: inputVal,
+        hScore: score        
+    }
+
+    getHighScores();
+
+    highscores.push(highscore);
+    
+    localStorage.setItem("highscoreStorage", JSON.stringify(highscores));
+    
     event.target.innerHTML = "Score Saved!";
     event.target.setAttribute("onclick", "");
 
     card.removeChild(document.getElementById("highScoreInput"));
+}
+
+function getHighScores(){
+    var savedScores = localStorage.getItem("highscoreStorage");
+
+    if(!savedScores){
+        return false;
+    }
+
+    savedScores = JSON.parse(savedScores);
+    
+    for(var i = 0; i < savedScores.length; i++){
+        highscores.push(savedScores[i]);
+    }
 }
 
 function startButtonListener(event){
