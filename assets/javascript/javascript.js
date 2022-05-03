@@ -23,18 +23,7 @@ var questionData = [{
 var timeLeft = 30;
 var timerStarted = false;
 
-var interval = setInterval(function(){
-    if(timerStarted == true){
-        timeLeft--;
-        if(timeLeft > 0){
-            timeEl.innerHTML = timeLeft;
-        }else{
-            timeEl.innerHTML = timeLeft;
-            clearInterval(interval);
-            gameOver("time");
-        }
-    }
-}, 1000);
+var interval;
 
 var qnum = 0;
 var score = 0;
@@ -129,16 +118,23 @@ function gameOver(condition){
     var saveScore = document.createElement("button");
     saveScore.innerHTML = "Save your highscore!";
     saveScore.setAttribute("class", "btn");
+    saveScore.setAttribute("onclick", "saveScoreHandler(event)");
     card.appendChild(saveScore);
+
+    var tryAgainDiv = document.createElement("div");
+    tryAgainDiv.setAttribute("class", "row justify-content-center");
 
     var tryAgainBtn = document.createElement("button");
     tryAgainBtn.innerHTML = "Try Again!";
+    tryAgainBtn.addEventListener("click", function(){
+        location.reload();
+    })
     tryAgainBtn.setAttribute("class", "btn");
-    card.appendChild(tryAgainBtn);
+    tryAgainDiv.appendChild(tryAgainBtn);
+    card.appendChild(tryAgainDiv);
 }
 
 function nextQuestion(correct){
-    console.log(qnum);
     if(correct == true){
         qnum++;
         
@@ -148,7 +144,6 @@ function nextQuestion(correct){
             clearInterval(interval);
             return;
         }
-        console.log(qnum);
         for(var i = 0; i < 4; i++){
             var btn = document.querySelector("button[data-id='" + i + "']");
             btn.innerHTML = questionData[qnum].buttons[i];
@@ -157,36 +152,62 @@ function nextQuestion(correct){
         }
     } else if(correct == false){
         timeLeft = timeLeft - 10;
+
+        qnum++;
+        
+        //End game if no more questions
+        if(!questionData[qnum]){
+            gameOver();
+            clearInterval(interval);
+            return;
+        }
+        for(var i = 0; i < 4; i++){
+            var btn = document.querySelector("button[data-id='" + i + "']");
+            btn.innerHTML = questionData[qnum].buttons[i];
+    
+            questionTitle.innerHTML = questionData[qnum].question;
+        }
     }
 }
 
 function startTimer(){
     timerStarted = true;
+    interval = setInterval(function(){
+        if(timerStarted == true){
+            timeLeft--;
+            if(timeLeft > 0){
+                timeEl.innerHTML = timeLeft;
+            }else{
+                timeEl.innerHTML = timeLeft;
+                clearInterval(interval);
+                gameOver("time");
+            }
+        }
+    }, 1000);
 }
 
 function quizBtnHandler(event){
     var targetEl = event.target;
-    console.log(targetEl.innerHTML);
-    console.log(questionData[qnum].answer)
 
     //If target is a quiz answer button
     if(targetEl.hasAttribute("data-id")){
 
         //Validate if the input == the answer
         if(targetEl.innerHTML == questionData[qnum].answer){
-            console.log(true);
             score++;
             nextQuestion(true);
         }
         else if(targetEl.type === "submit"){
-            console.log(false);
             nextQuestion(false);
         }
     }
 }
 
-function saveScoreListener(){
-    
+function saveScoreHandler(event){
+    event.target.innerHTML = "Score Saved!";
+    event.target.setAttribute("onclick", "");
+
+    card.removeChild(document.getElementById("highScoreInput"));
 }
 
 function startButtonListener(event){
