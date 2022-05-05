@@ -31,10 +31,8 @@ var qnum = 0;
 var score = 0;
 
 var questionTitle;
-var btn1;
-var btn2;
-var btn3;
-var btn4;
+var btn = [];
+var btnDiv = [];
 var btnHolder;
 
 var card = document.getElementById("quiz-card");
@@ -49,30 +47,19 @@ function startQuiz(){
     card.appendChild(questionTitle);
 
     btnHolder = document.createElement("div");
-
-    btn1 = document.createElement("button");
-    btn1.textContent = questionData[qnum].buttons[0];
-    btn1.setAttribute("data-id", 0);
-    btn1.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn1);
-
-    btn2 = document.createElement("button");
-    btn2.textContent = questionData[qnum].buttons[1];
-    btn2.setAttribute("data-id", 1);
-    btn2.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn2);
-
-    btn3 = document.createElement("button");
-    btn3.textContent = questionData[qnum].buttons[2];
-    btn3.setAttribute("data-id", 2);
-    btn3.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn3);
-
-    btn4 = document.createElement("button");
-    btn4.textContent = questionData[qnum].buttons[3];
-    btn4.setAttribute("data-id", 3);
-    btn4.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn4);
+    
+    //create button elements
+    for(var i = 0; i < 4; i++){
+        var newBtn = document.createElement("button")
+        var newBtnDiv = document.createElement("div");
+        btn.push(newBtn);
+        btnDiv.push(newBtnDiv);
+        btn[i].textContent = questionData[qnum].buttons[i];
+        btn[i].setAttribute("data-id", i);
+        btn[i].setAttribute("class", "btn col-3");
+        btnHolder.appendChild(btnDiv[i]);
+        btnDiv[i].appendChild(btn[i]);
+    }
 
     card.appendChild(btnHolder);
 
@@ -137,6 +124,7 @@ function gameOver(condition){
 }
 
 function viewHighScores(){
+    timerStarted = false;
     if(!document.getElementById("high-score-title")){
         card.innerHTML = "<h2 id='high-score-title'>High-Scores:</h2>";
 
