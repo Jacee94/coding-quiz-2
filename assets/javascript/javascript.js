@@ -35,6 +35,8 @@ var btn = [];
 var btnDiv = [];
 var btnHolder;
 
+var ansValidateDiv;
+
 var card = document.getElementById("quiz-card");
 var timeEl = document.getElementById("time-left");
 timeEl.innerHTML = timeLeft;
@@ -43,6 +45,7 @@ function startQuiz(){
     card.innerHTML = "";
 
     questionTitle = document.createElement("h2")
+    questionTitle.setAttribute("class", "col-6");
     questionTitle.innerHTML = questionData[qnum].question;
     card.appendChild(questionTitle);
 
@@ -84,6 +87,7 @@ function gameOver(condition){
     }else {
         gameOverTitle.innerHTML = "Game Over, you answered all questions!";
     }
+    gameOverTitle.setAttribute("class", "col-6");
     card.appendChild(gameOverTitle);
 
     var totalScore = (score * 10) + timeLeft;
@@ -121,6 +125,7 @@ function gameOver(condition){
     tryAgainBtn.setAttribute("class", "btn");
     tryAgainDiv.appendChild(tryAgainBtn);
     card.appendChild(tryAgainDiv);
+    card.appendChild(ansValidateDiv);
 }
 
 function viewHighScores(){
@@ -165,15 +170,26 @@ function viewHighScores(){
 }
 
 function nextQuestion(correct){
+    // See if the answer validation element has been created, create it if it has not
+    if(!ansValidateDiv){
+        ansValidateDiv = document.createElement("div");
+        ansValidateDiv.setAttribute("id", "ans-validate-div");
+        ansValidateDiv.setAttribute("class", "col-6 justify-self-center");
+        card.appendChild(ansValidateDiv);
+    }
+    
     if(correct == true){
+        ansValidateDiv.innerHTML = "Correct!";
+
         qnum++;
-        
+
         //End game if no more questions
         if(!questionData[qnum]){
             gameOver();
             clearInterval(interval);
             return;
         }
+
         for(var i = 0; i < 4; i++){
             var btn = document.querySelector("button[data-id='" + i + "']");
             btn.innerHTML = questionData[qnum].buttons[i];
@@ -181,6 +197,7 @@ function nextQuestion(correct){
             questionTitle.innerHTML = questionData[qnum].question;
         }
     } else if(correct == false){
+        ansValidateDiv.innerHTML = "Incorrect! The correct answer was: " + questionData[qnum].answer;
         timeLeft = timeLeft - 10;
 
         qnum++;
@@ -263,9 +280,11 @@ function saveScoreHandler(event){
 }
 
 function getHighScores(){
+    //Check if the highscores have already been retrieved
     if(!highscores[0]){
         var savedScores = localStorage.getItem("highscoreStorage");
 
+        //If no savedScores data, exit
         if(!savedScores){
             return false;
         }
