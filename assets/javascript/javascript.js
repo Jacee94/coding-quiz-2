@@ -143,8 +143,6 @@ function viewHighScores(){
             }
         });
 
-        console.log(highscores);
-
         for(var i = 0; i < highscores.length; i++){
             var scoreDiv = document.createElement("div");
             scoreDiv.setAttribute("class", "row justify-content-center");
@@ -251,7 +249,6 @@ function quizBtnHandler(event){
 }
 
 function saveScoreHandler(event){
-    debugger;
     var input = document.getElementById("highScoreInput");
     if(input.value.length != 2){
         if(event.target.innerHTML != "Save your highscore! Please Enter a two letter initial"){
