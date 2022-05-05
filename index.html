@@ -10,17 +10,17 @@
 </head>
 <body>
     <!-- Header -->
-    <header class="row justify-content-between">
-        <div id="view-highscores" class="col-1">View Highscores!</div>
+    <header class="row justify-content-between align-items-center">
+        <button id="view-highscores" class="btn" onclick="viewHighScores()" class="col-1">View Highscores!</button>
 
         <div id="time-display" class="col-2">Time left: <span id=time-left></span></div>
     </header>
     <!-- Quiz Content-->
     <section id="quiz-content" class="row justify-content-center">
         <div id="quiz-card" class="col-8">
-            <h2 id="quiz-card-title">Coding Quiz!</h2>
+            <h2 id="quiz-card-title" class="col-6">Coding Quiz!</h2>
             <div id="instructions">When you click the start button, you will have 
-                1 minute to answer as many questions as possible. <br> Wrong answers will
+                45 seconds to answer as many questions as possible. <br> Wrong answers will
                 penalize you by 10 seconds!
             </div>
             <button id="start-quiz-btn" class="btn">Start Quiz!</button>

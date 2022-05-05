@@ -14,8 +14,16 @@ header{
     border-radius: 10px;
 }
 
+h2{
+    margin-bottom: 20px;
+}
+
 section{
     text-align: center;
+}
+
+#time-display{
+    text-align: right;
 }
 
 #quiz-card{
@@ -26,6 +34,13 @@ section{
     border-radius: 20px;
 }
 
+#quiz-card h2{
+    border-bottom: black 2px solid;
+    padding: 10px;
+    margin: 0 auto 10px auto;
+
+}
+
 #instructions{
     margin: 10px;
 }
@@ -34,4 +49,18 @@ section{
     background-color: purple;
     color: white;
     margin: 10px;
+}
+
+#ans-validate-div{
+    color: darkgrey;
+    margin: 20px auto;
+    padding: 20px;
+    border-top: darkgrey 2px solid;
+    text-align: center;
+}
+
+.highscore-text{
+    background-color: purple;
+    color: white;
+    border-radius: 10px;
 }

@@ -20,31 +20,22 @@ var questionData = [{
     answer: "onclick"
 }];
 
-var timeLeft = 30;
+var highscores = [];
+
+var timeLeft = 45;
 var timerStarted = false;
 
-var interval = setInterval(function(){
-    if(timerStarted == true){
-        timeLeft--;
-        if(timeLeft > 0){
-            timeEl.innerHTML = timeLeft;
-        }else{
-            timeEl.innerHTML = timeLeft;
-            clearInterval(interval);
-            gameOver("time");
-        }
-    }
-}, 1000);
+var interval;
 
 var qnum = 0;
 var score = 0;
 
 var questionTitle;
-var btn1;
-var btn2;
-var btn3;
-var btn4;
+var btn = [];
+var btnDiv = [];
 var btnHolder;
+
+var ansValidateDiv;
 
 var card = document.getElementById("quiz-card");
 var timeEl = document.getElementById("time-left");
@@ -54,34 +45,24 @@ function startQuiz(){
     card.innerHTML = "";
 
     questionTitle = document.createElement("h2")
+    questionTitle.setAttribute("class", "col-6");
     questionTitle.innerHTML = questionData[qnum].question;
     card.appendChild(questionTitle);
 
     btnHolder = document.createElement("div");
-
-    btn1 = document.createElement("button");
-    btn1.textContent = questionData[qnum].buttons[0];
-    btn1.setAttribute("data-id", 0);
-    btn1.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn1);
-
-    btn2 = document.createElement("button");
-    btn2.textContent = questionData[qnum].buttons[1];
-    btn2.setAttribute("data-id", 1);
-    btn2.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn2);
-
-    btn3 = document.createElement("button");
-    btn3.textContent = questionData[qnum].buttons[2];
-    btn3.setAttribute("data-id", 2);
-    btn3.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn3);
-
-    btn4 = document.createElement("button");
-    btn4.textContent = questionData[qnum].buttons[3];
-    btn4.setAttribute("data-id", 3);
-    btn4.setAttribute("class", "btn col-9");
-    btnHolder.appendChild(btn4);
+    
+    //create button elements
+    for(var i = 0; i < 4; i++){
+        var newBtn = document.createElement("button")
+        var newBtnDiv = document.createElement("div");
+        btn.push(newBtn);
+        btnDiv.push(newBtnDiv);
+        btn[i].textContent = questionData[qnum].buttons[i];
+        btn[i].setAttribute("data-id", i);
+        btn[i].setAttribute("class", "btn col-3");
+        btnHolder.appendChild(btnDiv[i]);
+        btnDiv[i].appendChild(btn[i]);
+    }
 
     card.appendChild(btnHolder);
 
@@ -106,6 +87,7 @@ function gameOver(condition){
     }else {
         gameOverTitle.innerHTML = "Game Over, you answered all questions!";
     }
+    gameOverTitle.setAttribute("class", "col-6");
     card.appendChild(gameOverTitle);
 
     var totalScore = (score * 10) + timeLeft;
@@ -129,17 +111,95 @@ function gameOver(condition){
     var saveScore = document.createElement("button");
     saveScore.innerHTML = "Save your highscore!";
     saveScore.setAttribute("class", "btn");
+    saveScore.setAttribute("onclick", "saveScoreHandler(event)");
     card.appendChild(saveScore);
+
+    var tryAgainDiv = document.createElement("div");
+    tryAgainDiv.setAttribute("class", "row justify-content-center");
 
     var tryAgainBtn = document.createElement("button");
     tryAgainBtn.innerHTML = "Try Again!";
+    tryAgainBtn.addEventListener("click", function(){
+        location.reload();
+    })
     tryAgainBtn.setAttribute("class", "btn");
-    card.appendChild(tryAgainBtn);
+    tryAgainDiv.appendChild(tryAgainBtn);
+    card.appendChild(tryAgainDiv);
+    card.appendChild(ansValidateDiv);
+}
+
+function viewHighScores(){
+    timerStarted = false;
+    if(!document.getElementById("high-score-title")){
+        card.innerHTML = "<h2 id='high-score-title'>High-Scores:</h2>";
+
+        getHighScores();
+
+        highscores.sort((a,b)=>{
+            if(a.hScore > b.hScore){
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+
+        console.log(highscores);
+
+        for(var i = 0; i < highscores.length; i++){
+            var scoreDiv = document.createElement("div");
+            scoreDiv.setAttribute("class", "row justify-content-center");
+            var p = document.createElement("p");
+            p.innerHTML = highscores[i].initial + " | " + highscores[i].hScore;
+            p.setAttribute("class", "highscore-text col-3");
+            card.appendChild(scoreDiv);
+            scoreDiv.appendChild(p);
+        }
+
+        var goBackDiv = document.createElement("div");
+        goBackDiv.setAttribute("class", "row justify-content-center");
+
+        var goBackBtn = document.createElement("button");
+        goBackBtn.innerHTML = "Go back to start";
+        goBackBtn.addEventListener("click", function(){
+            location.reload();
+        });
+        goBackBtn.setAttribute("class", "btn");
+        goBackDiv.appendChild(goBackBtn);
+        card.appendChild(goBackDiv);
+    }
 }
 
 function nextQuestion(correct){
-    console.log(qnum);
+    // See if the answer validation element has been created, create it if it has not
+    if(!ansValidateDiv){
+        ansValidateDiv = document.createElement("div");
+        ansValidateDiv.setAttribute("id", "ans-validate-div");
+        ansValidateDiv.setAttribute("class", "col-6 justify-self-center");
+        card.appendChild(ansValidateDiv);
+    }
+    
     if(correct == true){
+        ansValidateDiv.innerHTML = "Correct!";
+
+        qnum++;
+
+        //End game if no more questions
+        if(!questionData[qnum]){
+            gameOver();
+            clearInterval(interval);
+            return;
+        }
+
+        for(var i = 0; i < 4; i++){
+            var btn = document.querySelector("button[data-id='" + i + "']");
+            btn.innerHTML = questionData[qnum].buttons[i];
+    
+            questionTitle.innerHTML = questionData[qnum].question;
+        }
+    } else if(correct == false){
+        ansValidateDiv.innerHTML = "Incorrect! The correct answer was: " + questionData[qnum].answer;
+        timeLeft = timeLeft - 10;
+
         qnum++;
         
         //End game if no more questions
@@ -148,45 +208,93 @@ function nextQuestion(correct){
             clearInterval(interval);
             return;
         }
-        console.log(qnum);
         for(var i = 0; i < 4; i++){
             var btn = document.querySelector("button[data-id='" + i + "']");
             btn.innerHTML = questionData[qnum].buttons[i];
     
             questionTitle.innerHTML = questionData[qnum].question;
         }
-    } else if(correct == false){
-        timeLeft = timeLeft - 10;
     }
 }
 
 function startTimer(){
     timerStarted = true;
+    interval = setInterval(function(){
+        if(timerStarted == true){
+            timeLeft--;
+            if(timeLeft > 0){
+                timeEl.innerHTML = timeLeft;
+            }else{
+                timeEl.innerHTML = timeLeft;
+                clearInterval(interval);
+                gameOver("time");
+            }
+        }
+    }, 1000);
 }
 
 function quizBtnHandler(event){
     var targetEl = event.target;
-    console.log(targetEl.innerHTML);
-    console.log(questionData[qnum].answer)
 
     //If target is a quiz answer button
     if(targetEl.hasAttribute("data-id")){
 
         //Validate if the input == the answer
         if(targetEl.innerHTML == questionData[qnum].answer){
-            console.log(true);
             score++;
             nextQuestion(true);
         }
         else if(targetEl.type === "submit"){
-            console.log(false);
             nextQuestion(false);
         }
     }
 }
 
-function saveScoreListener(){
+function saveScoreHandler(event){
+    debugger;
+    var input = document.getElementById("highScoreInput");
+    if(input.value.length != 2){
+        if(event.target.innerHTML != "Save your highscore! Please Enter a two letter initial"){
+            event.target.innerHTML += " Please Enter a two letter initial";
+        }
+        return;
+    }
+
+    var inputVal = input.value;
+
+    var highscore = {
+        initial: inputVal,
+        hScore: (score * 10) + timeLeft        
+    }
+
+    getHighScores();
+
+    highscores.push(highscore);
     
+    localStorage.setItem("highscoreStorage", JSON.stringify(highscores));
+    
+    event.target.innerHTML = "Score Saved!";
+    event.target.setAttribute("onclick", "");
+
+    card.removeChild(document.getElementById("highScoreInput"));
+}
+
+function getHighScores(){
+    //Check if the highscores have already been retrieved
+    if(!highscores[0]){
+        var savedScores = localStorage.getItem("highscoreStorage");
+
+        //If no savedScores data, exit
+        if(!savedScores){
+            return false;
+        }
+
+        savedScores = JSON.parse(savedScores);
+        
+        for(var i = 0; i < savedScores.length; i++){
+            highscores.push(savedScores[i]);
+        }
+    }
 }
 
 function startButtonListener(event){
