@@ -22,6 +22,10 @@ section{
     text-align: center;
 }
 
+#time-display{
+    text-align: right;
+}
+
 #quiz-card{
     background-color: white;
     width: auto;
