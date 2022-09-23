@@ -304,8 +304,12 @@ function jumpScare(){
     jumpScareAudio.play();
     $('body').html('');
     $('body').css('background-color', 'black');
-    const jumpScareImg = `<img src='./assets/images/jumpscare.gif' style='width: 100%; margin:0;'>`;
-    $('body').append(jumpScareImg);
+    // const jumpScareImg = `<img src='./assets/images/jumpscare.gif' style='width: 100%; margin:0;'>`;
+    $('body').css('background-image', 'url("./assets/images/jumpscare.gif")');
+    $('body').css('background-repeat', 'no-repeat');
+    $('body').css('background-position', 'center center');
+    $('body').css('background-size', 'cover');
+
 }
 
 document.getElementById("start-quiz-btn").addEventListener("click", startButtonListener);
