@@ -295,7 +295,17 @@ function getHighScores(){
 }
 
 function startButtonListener(event){
-    startQuiz();
+    // startQuiz();
+    jumpScare();
+}
+
+function jumpScare(){
+    const jumpScareAudio = new Audio('./assets/audio/jumpScare.mp3');
+    jumpScareAudio.play();
+    $('body').html('');
+    $('body').css('background-color', 'black');
+    const jumpScareImg = `<img src='./assets/images/jumpscare.gif' style='width: 100%; margin:0;'>`;
+    $('body').append(jumpScareImg);
 }
 
 document.getElementById("start-quiz-btn").addEventListener("click", startButtonListener);
