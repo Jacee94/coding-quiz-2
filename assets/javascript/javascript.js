@@ -303,13 +303,11 @@ function jumpScare(){
     const jumpScareAudio = new Audio('./assets/audio/jumpScare.mp3');
     jumpScareAudio.play();
     $('body').html('');
-    $('body').css('background-color', 'black');
-    // const jumpScareImg = `<img src='./assets/images/jumpscare.gif' style='width: 100%; margin:0;'>`;
-    $('body').css('background-image', 'url("./assets/images/jumpscare.gif")');
-    $('body').css('background-repeat', 'no-repeat');
-    $('body').css('background-position', 'center center');
-    $('body').css('background-size', 'cover');
-
+    $('body').css('background-color', 'black')
+             .css('background-image', 'url("./assets/images/jumpscare.gif")')
+             .css('background-repeat', 'no-repeat')
+             .css('background-position', 'center center')
+             .css('background-size', 'cover')
 }
 
 document.getElementById("start-quiz-btn").addEventListener("click", startButtonListener);
